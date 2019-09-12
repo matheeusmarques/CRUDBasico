@@ -5,6 +5,7 @@
  */
 package crud.visao;
 
+import controller.EstadoController;
 import crud.modelo.Banco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -104,17 +105,8 @@ public class CadastroEstado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
-        Connection conexao = Banco.abrirConexao();
-        try {
-            PreparedStatement comando = conexao.prepareStatement("insert into estado (sigla, nome) values (?, ?)");
-            comando.setString(1, campoSigla.getText());
-            comando.setString(2, campoNome.getText());
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
-        }
+        EstadoController estado = new EstadoController();
+        estado.inserir(campoSigla.getText(), campoNome.getText());
         atualizarListaEstados();
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
@@ -167,7 +159,7 @@ public class CadastroEstado extends javax.swing.JFrame {
         try {
             Connection conn = Banco.abrirConexao();
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
-            ResultSet rs = ps.executeQuery();            
+            ResultSet rs = ps.executeQuery();
             String estados = "";
             while (rs.next()) {
                 estados += rs.getInt("id") + " - ";

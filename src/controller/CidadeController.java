@@ -6,9 +6,13 @@
 package controller;
 
 import crud.modelo.Banco;
+import crud.modelo.Estado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -60,5 +64,49 @@ public class CidadeController {
         } catch (SQLException ex) {
 
         }
+    }
+
+    public String atualizarListaCidades() {
+        String cidades = null;
+        try {
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                cidades += rs.getInt("id") + " - ";
+                cidades += rs.getString("nome") + "\n";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cidades;
+    }
+
+    public ArrayList preencherComboEstados() {
+        Estado estado = new Estado();
+        ArrayList<String> estados = new ArrayList();
+        try {
+            Connection conn = Banco.abrirConexao();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnCount = rsmd.getColumnCount();
+            while (rs.next()) {
+                int i = 1;
+                while (i <= columnCount) {
+                    estados.add(i, rs.getString("id"));
+                    estados.add(i, rs.getString("nome"));
+                }
+
+            }
+
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return estados;
+
     }
 }

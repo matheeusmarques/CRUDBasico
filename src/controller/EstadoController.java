@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class EstadoController {
 
-    public void inserir(String nome, String sigla) {
+    public void inserir(String sigla, String nome) {
         try {
             Connection conexao = Banco.abrirConexao();
 
@@ -26,6 +26,7 @@ public class EstadoController {
             comando.executeUpdate();
             comando.close();
             conexao.close();
+            System.out.println("ok");
         } catch (SQLException ex) {
 
         }

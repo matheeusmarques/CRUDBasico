@@ -5,6 +5,7 @@
  */
 package crud.visao;
 
+import controller.CidadeController;
 import crud.modelo.Banco;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -106,17 +107,8 @@ public class CadastroCidade extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoIncluirActionPerformed
-        Connection conexao = Banco.abrirConexao();
-        try {
-            PreparedStatement comando = conexao.prepareStatement("insert into cidade (nome, idestado) values (?, ?)");
-            comando.setString(1, campoNome.getText());
-            comando.setInt(2, idEstados.get(comboEstado.getSelectedIndex()));
-            comando.executeUpdate();
-            comando.close();
-            conexao.close();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
-        }
+        CidadeController cidade = new CidadeController();
+        cidade.inserir(campoNome.getText(), idEstados.get(comboEstado.getSelectedIndex()));
         atualizarListaCidades();
     }//GEN-LAST:event_botaoIncluirActionPerformed
 
@@ -166,39 +158,37 @@ public class CadastroCidade extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     ArrayList<Integer> idEstados = new ArrayList<>();
-    
+
     private void atualizarListaCidades() {
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM cidade");
-            ResultSet rs = ps.executeQuery();            
-            String cidades = "";
-            while (rs.next()) {
-                cidades += rs.getInt("id") + " - ";                
-                cidades += rs.getString("nome") + "\n";
-            }
-            painelCidades.setText(cidades);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        CidadeController cidade = new CidadeController();
+        painelCidades.setText(cidade.atualizarListaCidades());
+
     }
 
     private void preencherComboEstados() {
-        try {
-            Connection conn = Banco.abrirConexao();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
-            ResultSet rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                idEstados.add(rs.getInt("id"));
-                comboEstado.addItem(rs.getString("nome"));
-            }
-            
-            ps.close();
-            conn.close();
+        CidadeController cidade = new CidadeController();
+        ArrayList<String> comboCidades = new ArrayList<>();
+        comboCidades = cidade.preencherComboEstados();
+        
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        idEstados.add(rs.getInt("id"));
+//        comboEstado.addItem(rs.getString("nome"));
+//
+//        try {
+//            Connection conn = Banco.abrirConexao();
+//            PreparedStatement ps = conn.prepareStatement("SELECT * FROM estado");
+//            ResultSet rs = ps.executeQuery();
+//
+//            while (rs.next()) {
+//                idEstados.add(rs.getInt("id"));
+//                comboEstado.addItem(rs.getString("nome"));
+//            }
+//
+//            ps.close();
+//            conn.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
